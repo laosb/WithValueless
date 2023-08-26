@@ -3,6 +3,12 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
+extension String {
+  func capitalizingFirstLetterOnly() -> String {
+    return prefix(1).uppercased() + dropFirst()
+  }
+}
+
 public struct WithValuelessMacro: PeerMacro {
   enum WithValuelessError: CustomStringConvertible, Error {
     case onlyApplicableToEnum
@@ -17,8 +23,8 @@ public struct WithValuelessMacro: PeerMacro {
   private static func generateCaseName(for element: EnumCaseElementListSyntax.Element) -> String {
     if let values = element.parameterClause?.parameters {
       element.name.text + values.map { value in
-        let firstName = value.firstName?.text.capitalized ?? ""
-        let secondName = value.secondName?.text.capitalized ?? ""
+        let firstName = value.firstName?.text.capitalizingFirstLetterOnly() ?? ""
+        let secondName = value.secondName?.text.capitalizingFirstLetterOnly() ?? ""
         let type = value.type.description
         return [firstName, secondName, type].joined()
       }.joined()
