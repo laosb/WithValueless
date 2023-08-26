@@ -7,40 +7,45 @@ import XCTest
 import WithValuelessMacros
 
 let testMacros: [String: Macro.Type] = [
-    "stringify": StringifyMacro.self,
+    "ＷithValueless": WithValuelessMacro.self,
 ]
 #endif
 
 final class WithValuelessTests: XCTestCase {
-    func testMacro() throws {
-        #if canImport(WithValuelessMacros)
-        assertMacroExpansion(
-            """
-            #stringify(a + b)
-            """,
-            expandedSource: """
-            (a + b, "a + b")
-            """,
-            macros: testMacros
-        )
-        #else
-        throw XCTSkip("macros are only supported when running tests for the host platform")
-        #endif
-    }
-
-    func testMacroWithStringLiteral() throws {
-        #if canImport(WithValuelessMacros)
-        assertMacroExpansion(
-            #"""
-            #stringify("Hello, \(name)")
-            """#,
-            expandedSource: #"""
-            ("Hello, \(name)", #""Hello, \(name)""#)
-            """#,
-            macros: testMacros
-        )
-        #else
-        throw XCTSkip("macros are only supported when running tests for the host platform")
-        #endif
-    }
+  func testMacro() throws {
+#if canImport(WithValuelessMacros)
+    assertMacroExpansion(
+      """
+      @WithValueless indirect enum Unit {
+      case ton, kilogram, gram
+      case kilometer, meter, decimeter, centimeter
+      case currency(code: String)
+      case derived(Unit, power: Int)
+      case derived(Unit, by: Unit)
+      case custom(String)
+      }
+      """,
+      expandedSource: """
+      @WithValueless indirect enum Unit {
+      case ton, kilogram, gram
+      case kilometer, meter, decimeter, centimeter
+      case currency(code: String)
+      case derived(Unit, power: Int)
+      case derived(Unit, by: Unit)
+      case custom(String)
+      enum ValuelessUnit {
+      case ton, kilogram, gram
+      case kilometer, meter, decimeter, centimeter
+      case currencyCodeString
+      case derivedUnitPowerInt
+      case derivedUnitByUnit
+      case customString
+      }
+      """,
+      macros: testMacros
+    )
+#else
+    throw XCTSkip("macros are only supported when running tests for the host platform")
+#endif
+  }
 }

@@ -1,8 +1,11 @@
 import WithValueless
 
-let a = 17
-let b = 25
-
-let (result, code) = #stringify(a + b)
-
-print("The value \(result) was produced by the code \"\(code)\"")
+//@WithValueless
+indirect enum Unit {
+  case ton, kilogram, gram
+  case kilometer, meter, decimeter, centimeter
+  case currency(code: String)
+  case derived(Unit, power: Int)
+  case derived(Unit, by: Unit)
+  case custom(String)
+}

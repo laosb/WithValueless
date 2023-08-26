@@ -1,11 +1,8 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-/// A macro that produces both a value and a string containing the
-/// source code that generated the value. For example,
+/// A macro produces a copy of enum without any associated values.
 ///
-///     #stringify(x + y)
-///
-/// produces a tuple `(x + y, "x + y")`.
-@freestanding(expression)
-public macro stringify<T>(_ value: T) -> (T, String) = #externalMacro(module: "WithValuelessMacros", type: "StringifyMacro")
+/// The copy will be named as `Valueless{YourEnum}`.
+@attached(peer, names: prefixed(Valueless))
+public macro WithValueless() = #externalMacro(module: "WithValuelessMacros", type: "WithValuelessMacro")
