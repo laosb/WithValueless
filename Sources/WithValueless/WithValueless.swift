@@ -5,4 +5,4 @@
 ///
 /// The copy will be named as `Valueless{YourEnum}`.
 @attached(peer, names: prefixed(Valueless))
-public macro WithValueless() = #externalMacro(module: "WithValuelessMacros", type: "WithValuelessMacro")
+public macro WithValueless(conformsTo protocols: [StaticString] = []) = #externalMacro(module: "WithValuelessMacros", type: "WithValuelessMacro")

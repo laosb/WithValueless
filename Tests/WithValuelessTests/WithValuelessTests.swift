@@ -16,7 +16,8 @@ final class WithValuelessTests: XCTestCase {
 #if canImport(WithValuelessMacros)
     assertMacroExpansion(
       """
-      @WithValueless indirect enum Unit {
+      @WithValueless(conformsTo: ["Codable", "CaseIterable"])
+      indirect enum Unit {
       case ton, kilogram, gram
       case kilometer, meter, decimeter, centimeter
       case currency(code: String)
@@ -26,14 +27,15 @@ final class WithValuelessTests: XCTestCase {
       }
       """,
       expandedSource: """
-      @WithValueless indirect enum Unit {
+      @WithValueless(conformsTo: ["Codable", "CaseIterable"])
+      indirect enum Unit {
       case ton, kilogram, gram
       case kilometer, meter, decimeter, centimeter
       case currency(code: String)
       case derived(Unit, power: Int)
       case derived(Unit, by: Unit)
       case custom(String)
-      enum ValuelessUnit {
+      enum ValuelessUnit: Codable, CaseIterable {
       case ton, kilogram, gram
       case kilometer, meter, decimeter, centimeter
       case currencyCodeString

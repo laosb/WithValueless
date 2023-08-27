@@ -1,6 +1,6 @@
 import WithValueless
 
-//@WithValueless
+@WithValueless(conformsTo: ["Codable", "CaseIterable"])
 indirect enum Unit {
   case ton, kilogram, gram
   case kilometer, meter, decimeter, centimeter

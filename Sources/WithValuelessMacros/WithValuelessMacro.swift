@@ -38,6 +38,17 @@ public struct WithValuelessMacro: PeerMacro {
       throw WithValuelessError.onlyApplicableToEnum
     }
     
+    var comformanceDeclaration = ""
+    if
+      case let .argumentList(arguments) = node.arguments,
+      let firstArgument = arguments.first,
+      firstArgument.label?.text == "conformsTo",
+      let array = firstArgument.expression.as(ArrayExprSyntax.self)
+    {
+      let protocolNames = array.elements.compactMap { $0.expression.as(StringLiteralExprSyntax.self)?.representedLiteralValue }
+      comformanceDeclaration = ": \(protocolNames.joined(separator: ", "))"
+    }
+    
     let members = enumDecl.memberBlock.members
     let caseDecls = members.compactMap { $0.decl.as(EnumCaseDeclSyntax.self) }
     let newCases = caseDecls.map { caseDecl in
@@ -45,7 +56,7 @@ public struct WithValuelessMacro: PeerMacro {
     }
     
     let enumString = """
-    enum Valueless\(enumDecl.name.text) {
+    enum Valueless\(enumDecl.name.text)\(comformanceDeclaration) {
       \(newCases.joined(separator: "\n"))
     }
     """
