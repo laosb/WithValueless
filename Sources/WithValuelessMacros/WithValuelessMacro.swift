@@ -10,10 +10,10 @@ extension String {
 }
 
 public struct WithValuelessMacro: PeerMacro {
-  enum WithValuelessError: CustomStringConvertible, Error {
+  public enum WithValuelessError: CustomStringConvertible, Error {
     case onlyApplicableToEnum
     
-    var description: String {
+    public var description: String {
       switch self {
       case .onlyApplicableToEnum: return "This macro can only be applied to an enum."
       }
@@ -34,6 +34,7 @@ public struct WithValuelessMacro: PeerMacro {
   }
   
   public static func expansion(of node: AttributeSyntax, providingPeersOf declaration: some DeclSyntaxProtocol, in context: some MacroExpansionContext) throws -> [DeclSyntax] {
+    print("hello")
     guard let enumDecl = declaration.as(EnumDeclSyntax.self) else {
       throw WithValuelessError.onlyApplicableToEnum
     }
